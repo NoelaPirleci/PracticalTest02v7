@@ -33,13 +33,12 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_practical_test02v7_main); // Asigură-te că XML-ul se numește activity_main.xml
+        setContentView(R.layout.activity_practical_test02v7_main);
 
-        // 1. Inițializare elemente Server
+        // initializare server
         serverPortEditText = findViewById(R.id.server_port_edit_text);
         connectButton = findViewById(R.id.connect_button);
 
-        // Logică buton pornire Server
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +48,6 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Pornim serverul
                 if (serverThread == null || !serverThread.isAlive()) {
                     serverThread = new ServerThread(Integer.parseInt(serverPort));
                     serverThread.start();
@@ -59,28 +57,26 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
             }
         });
 
-        // 2. Inițializare elemente Client
+        // initializare client
         clientAddressEditText = findViewById(R.id.client_address_edit_text);
         clientPortEditText = findViewById(R.id.client_port_edit_text);
         cerereEditText = findViewById(R.id.cerere_edit_text);
         setAlarmButton = findViewById(R.id.set_alarm_button);
         alarmInfoTextView = findViewById(R.id.alarm_info_text_view);
 
-        // Logică buton trimitere comandă Client
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String clientAddress = clientAddressEditText.getText().toString();
                 String clientPort = clientPortEditText.getText().toString();
-                String comanda = cerereEditText.getText().toString(); // ex: "set,1,5" sau "poll"
+                String comanda = cerereEditText.getText().toString();
 
                 if (clientAddress.isEmpty() || clientPort.isEmpty() || comanda.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Toate câmpurile clientului sunt obligatorii!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Pornim task-ul clientului pentru a trimite comanda
-                // Parametrii sunt: Adresa, Port, Comanda, TextView-ul unde afisam raspunsul
+                // pornesc client cu info necesare
                 ClientAsyncTask clientAsyncTask = new ClientAsyncTask(
                         clientAddress,
                         Integer.parseInt(clientPort),
@@ -95,7 +91,6 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.i("Colocviu", "onDestroy() callback method was invoked");
-        // Oprim serverul când închidem aplicația pentru a elibera portul
         if (serverThread != null) {
             serverThread.stopServer();
         }
